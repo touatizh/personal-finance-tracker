@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "server"
+version = "0.1.0"
+description = ""
+authors = ["Helmi Touati <touatizh@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Django = "^5.0.2"
+python-dotenv = "^1.0.1"
+mysqlclient = "^2.2.4"
+djangorestframework = "^3.14.0"
+djangorestframework-simplejwt = "^5.3.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
