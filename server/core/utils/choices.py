@@ -83,3 +83,23 @@ class Currency(TextChoices):
     HRK = 'HRK', _('Croatian Kuna')
     FJD = 'FJD', _('Fijian Dollar')
     BBD = 'BBD', _('Barbados Dollar')
+
+class TransactionType(TextChoices):
+    EXP = "EXP", _("Expense")
+    INC = "INC", _("Income")
+    TRA = "TRA", _("Transfert")
+
+class Category(TextChoices):
+    FD = "Food & Drinks", _("Food & Drinks")
+    GRO = "Groceries", _("Groceries")
+    TRANS = "Transportation", _("Transportation")
+    HOUSE = "Household", _("Household")
+    SHOP = "Shopping", _("Shopping")
+    VEC = "Vehicule", _("Vehicule")
+    EVE = "Life Events", _("Life Events")
+    ENT = "Entertainment", _("Entertainment")
+    COM = "Communication & Technology", _("Communication & Technology")
+    FIN = "Financial Expenses", _("Financial Expenses")
+    INV = "Investments", _("Investments")
+    INC = "Income", _("Income")
+    ETC = "Others",_("Others")
