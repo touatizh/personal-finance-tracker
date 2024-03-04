@@ -1,7 +1,8 @@
 from rest_framework.routers import DefaultRouter
+from core.users.views import UserViewSet
 
 router = DefaultRouter()
 
-#! Register API routes here
+router.register("users", UserViewSet)
 
 urlpatterns = router.urls
