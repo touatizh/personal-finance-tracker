@@ -9,7 +9,7 @@ class IsAdminOrAuthenticatedPermission(BasePermission):
         if view.action == "list" and request.user.is_superuser:
             return True
         # Allow admins and users only to retrieve their own user instance
-        elif view.action in ["retrieve", "update", "partial_update", "destroy"]:
+        elif view.action in ["create","retrieve", "update", "partial_update", "destroy"]:
             return request.user.is_authenticated
         return False
 
@@ -21,5 +21,15 @@ class UserPermission(BasePermission):
         # Allow admins and users only to retrieve their own user instance
         if view.action in ["retrieve", "update", "partial_update", "destroy"]:
             return user_obj == request.user or request.user.is_superuser
+        return False
+
+class AccountPermission(BasePermission):
+    """
+    Custom permission to only allow admins or account owner to access the account object.
+    """
+    def has_object_permission(self, request, view, account_obj):
+        # Allow admins and account owner only to retrieve their own account instance
+        if view.action in ["retrieve", "update", "partial_update", "destroy"]:
+            return account_obj.owner == request.user or request.user.is_superuser
         return False
 
