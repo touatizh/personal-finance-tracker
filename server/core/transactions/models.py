@@ -1,7 +1,7 @@
 from django.db import models
 from core.utils.choices import TransactionType, Currency, Category
 from core.accounts.models import Account
-from core.utils.validators import TransactionAmountValidator
+from core.utils.validators import TransactionAmountValidator, TransactionTimeValidator
 
 class Transaction(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,7 +10,7 @@ class Transaction(models.Model):
     category = models.CharField(max_length=48, choices=Category.choices)
     amount = models.DecimalField(max_digits=19, decimal_places=3, validators=[TransactionAmountValidator])
     currency = models.CharField(max_length=5, choices=Currency.choices)
-    date_time = models.DateTimeField()
+    date_time = models.DateTimeField(validators=[TransactionTimeValidator])
     description = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
