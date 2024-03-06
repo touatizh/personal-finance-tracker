@@ -33,3 +33,12 @@ class AccountPermission(BasePermission):
             return account_obj.owner == request.user or request.user.is_superuser
         return False
 
+class TransactionPermission(BasePermission):
+    """
+    Custom permission to only allow admins or transaction's related-account owner to access the account object.
+    """
+    def has_object_permission(self, request, view, transaction_obj):
+        # Allow admins and account owner only to retrieve their own account instance
+        if view.action in ["retrieve", "update", "partial_update", "destroy"]:
+            return transaction_obj.account.owner == request.user or request.user.is_superuser
+        return False
