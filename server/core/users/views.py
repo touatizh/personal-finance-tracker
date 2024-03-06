@@ -14,12 +14,12 @@ from django.utils import timezone
 
 from core.users.models import User
 from core.users.serializers import UserSerializer
-from core.utils.permissions import IsAdminOrAuthenticatedPermission, UserPermission
+from core.utils.permissions import UserPermission
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminOrAuthenticatedPermission, UserPermission]
+    permission_classes = [UserPermission]
 
 class MyTokenObtainPairView(TokenObtainPairView):
     """
