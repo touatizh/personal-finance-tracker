@@ -21,50 +21,6 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [UserPermission]
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    """
-    Custom implementation of the TokenObtainPairView to store refresh token in cookies instead of returning it in response body.
-    """
-    def post(self, request: Request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-
-        refresh_token = response.data.pop("refresh", None)
-        if refresh_token:
-            refresh_lifetime = settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
-            cookie_expiry = timezone.now() + refresh_lifetime + timedelta(days=1)
-            response.set_cookie(
-                key="refresh_token", 
-                value=refresh_token,
-                expires=cookie_expiry, #! cookie will live for 1 day longer than the refresh token
-                httponly=True, #! prevents JS access
-                secure=True, #! ensures cookie is sent over HTTPS only
-                samesite="Lax", #! Strict or Lax recommended for CSRF prevention
-                path="/auth" #! ensure cookie is only accessible from the auth endpoint
-            )
-        return response
-
-class MyTokenRefreshView(TokenRefreshView):
-    """
-    Custom implementation of the TokenRefreshView to store refresh token in cookies instead of returning it in res
-    """
-    def post(self, request, *args, **kwargs):
-        request.data.update({"refresh": request.COOKIES.get("refresh_token")})
-        response = super().post(request, *args, **kwargs)
-
-        refresh_token = response.data.pop("refresh", None)
-        if refresh_token:
-            refresh_lifetime = settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
-            cookie_expiry = timezone.now() + refresh_lifetime + timedelta(days=1)
-            response.set_cookie(
-                key="refresh_token", 
-                value=refresh_token,
-                expires=cookie_expiry, #! cookie will live for 1 day longer than the refresh token
-                httponly=True, #! prevents JS access
-                secure=True, #! ensures cookie is sent over HTTPS only
-                samesite="Lax", #! Strict or Lax recommended for CSRF prevention
-                path="/auth" #! ensure cookie is only accessible from the auth endpoint
-            )
-        return response
 
 class LogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
