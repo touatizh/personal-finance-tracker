@@ -3,10 +3,12 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "../../context/AuthContext";
 import LoginForm from "../forms/LoginForm";
 
 const LoginContainer = () => {
 	const navigate = useNavigate();
+	const { login } = useAuth();
 	const [errors, setErrors] = useState("");
 
 	const { mutate: getTokens } = useMutation(
@@ -14,8 +16,7 @@ const LoginContainer = () => {
 			axios.post("http://localhost:8000/auth/token/", credentials),
 		{
 			onSuccess: (res) => {
-				localStorage.setItem("access_token", res.data.access);
-				localStorage.setItem("refresh_token", res.data.refresh);
+				login(res.data);
 				navigate("/dashboard");
 			},
 			onError: (err) => {
@@ -28,11 +29,7 @@ const LoginContainer = () => {
 		}
 	);
 
-	const authenticate = async (credentials) => {
-		await getTokens(credentials);
-	};
-
-	return <LoginForm onSubmit={authenticate} errors={errors} />;
+	return <LoginForm onSubmit={getTokens} errors={errors} />;
 };
 
 export default LoginContainer;
