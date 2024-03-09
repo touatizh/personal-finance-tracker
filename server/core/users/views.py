@@ -1,4 +1,5 @@
 from datetime import timedelta
+import requests
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -21,6 +22,15 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [UserPermission]
 
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        user = User.objects.get(id=response.data["id"])
+        token = RefreshToken.for_user(user)
+        response.data["tokens"] = {
+            "refresh": str(token),
+            "access": str(token.access_token),
+        }
+        return response
 
 class LogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
