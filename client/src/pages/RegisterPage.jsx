@@ -36,7 +36,7 @@ const RegisterPage = () => {
 						<Link
 							href="/login"
 							className="font-semibold text-sm text-secondary-700 hover:text-secondary">
-							Sign In.
+							Sign In
 						</Link>
 					</p>
 				</CardFooter>
