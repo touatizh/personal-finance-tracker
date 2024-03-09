@@ -1,26 +1,32 @@
 import "./App.css";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
-
-const queryClient = new QueryClient();
+import Protected from "./lib/hoc/Protected";
+import WithProviders from "./lib/hoc/WithProviders";
+import { routes } from "./lib/routes.config";
 
 function App() {
 	return (
-		<QueryClientProvider client={queryClient}>
-			<Router>
+		<Router>
+			<WithProviders>
 				<Routes>
-					<Route
-						default
-						path="/dashboard"
-						element={<DashboardPage />}
-					/>
-					<Route path="/login" element={<LoginPage />} />
+					{routes.map((route) => {
+						const e = route.protected ? (
+							<Protected>{route.element}</Protected>
+						) : (
+							route.element
+						);
+						return (
+							<Route
+								key={route.path}
+								path={route.path}
+								element={e}
+							/>
+						);
+					})}
 				</Routes>
-			</Router>
-		</QueryClientProvider>
+			</WithProviders>
+		</Router>
 	);
 }
 
