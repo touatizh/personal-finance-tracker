@@ -4,13 +4,14 @@ from rest_framework import serializers
 from core.transactions.models import Transaction, TransactionType
 from core.utils.exceptions import IsNotAccountOwner
 from core.utils.currency_converter import currency_converter
+from core.accounts.serializers import AccountSerializer
 
 class TransactionSerializer(serializers.ModelSerializer):
+    account = AccountSerializer(read_only=True)
     class Meta:
         model = Transaction
         fields = "__all__"
         extra_kwargs = {
-            "account": {'write_only': True},
             "created_at": {'read_only': True},
             "updated_at":{'read_only': True},
         }
