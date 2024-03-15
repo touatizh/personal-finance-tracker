@@ -2,6 +2,7 @@ import DashboardPage from "../pages/DashboardPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import Logout from "../components/containers/Logout";
+import AccountsPage from "../pages/AccountsPage";
 
 export const routes = [
 	{
@@ -22,6 +23,11 @@ export const routes = [
 	{
 		path: "/logout",
 		element: <Logout />,
+		protected: true,
+	},
+	{
+		path: "/accounts",
+		element: <AccountsPage />,
 		protected: true,
 	},
 ];
