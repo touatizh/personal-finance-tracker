@@ -2,9 +2,11 @@ import { useQuery } from "react-query";
 import useAxios from "../../lib/useAxios";
 import { Card, CardBody } from "@nextui-org/react";
 import AccountIcon from "../ui/AccountIcon";
+import { useNavigate } from "react-router-dom";
 
 const Accounts = ({ sortedBy, searched }) => {
 	const axios = useAxios();
+	const navigate = useNavigate();
 	const { data: accounts, isLoading } = useQuery("accounts", () =>
 		axios.get("http://localhost:8000/api/v1/accounts/")
 	);
@@ -33,7 +35,11 @@ const Accounts = ({ sortedBy, searched }) => {
 	return (
 		<div className="flex flex-col flex-wrap gap-8">
 			{sortedAccounts?.map((account) => (
-				<Card key={account.id} className="h-16 p-3">
+				<Card
+					key={account.id}
+					className="h-16 p-3"
+					isPressable
+					onPress={() => navigate(`/accounts/${account.id}`)}>
 					<CardBody className="flex flex-row items-center gap-2 px-2 py-0 overflow-visible">
 						<AccountIcon
 							accountType={account.type}

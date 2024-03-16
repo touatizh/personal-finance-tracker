@@ -7,7 +7,8 @@ export function timeAgo(res) {
 		let timePassed = now.diff(transDate, "hours");
 		switch (true) {
 			case timePassed < 1:
-				trans.ago = `${timePassed * 60} minutes ago`;
+				timePassed = now.diff(transDate, "minutes");
+				trans.ago = `${timePassed} minutes ago`;
 				break;
 			case timePassed >= 1 && timePassed < 24:
 				trans.ago = `${timePassed} hour(s) ago`;
