@@ -6,12 +6,12 @@ import {
 	CardBody,
 	CardFooter,
 	Button,
-	Link,
 } from "@nextui-org/react";
 import AccountIcon from "../ui/AccountIcon";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import AccountTransactions from "./AccountTransactions";
+import AccountBalanceChart from "../charts/AccountBalanceChart";
 
 const AccountDetails = () => {
 	const { accountId } = useParams();
@@ -103,7 +103,12 @@ const AccountDetails = () => {
 					</Button>
 				</CardFooter>
 			</Card>
-
+			{activeTab === "balance" && (
+				<AccountBalanceChart
+					account={details?.data}
+					periodInDays={30}
+				/>
+			)}
 			{activeTab === "transactions" && (
 				<AccountTransactions account={accountId} />
 			)}
