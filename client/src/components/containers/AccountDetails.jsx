@@ -1,5 +1,5 @@
 import useAxios from "../../lib/useAxios";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, QueryClient } from "react-query";
 import {
 	Card,
 	CardHeader,
@@ -14,6 +14,7 @@ import { useState } from "react";
 import AccountTransactions from "./AccountTransactions";
 import AccountBalanceChart from "../charts/AccountBalanceChart";
 import EditAccount from "./EditAccount";
+import { useNavigate } from "react-router-dom";
 
 const AccountDetails = () => {
 	const { accountId } = useParams();
@@ -24,6 +25,20 @@ const AccountDetails = () => {
 	const { data: details, isLoading } = useQuery(["accounts", accountId], () =>
 		axios.get(`http://localhost:8000/api/v1/accounts/${accountId}`)
 	);
+
+	const queryClient = new QueryClient();
+	const navigate = useNavigate();
+	const { mutate: deleteAccount } = useMutation(
+		() =>
+			axios.delete(`http://localhost:8000/api/v1/accounts/${accountId}`),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("accounts");
+				navigate("/accounts");
+			},
+		}
+	);
+
 	return (
 		<>
 			<Card>
@@ -36,7 +51,10 @@ const AccountDetails = () => {
 							onPress={onOpen}>
 							Edit
 						</Button>
-						<Button variant="ghost" color="danger">
+						<Button
+							variant="ghost"
+							color="danger"
+							onPress={deleteAccount}>
 							Delete
 						</Button>
 					</div>
