@@ -2,6 +2,7 @@ import useAxios from "../../lib/useAxios";
 import { useQuery } from "react-query";
 import { timeAgo } from "../../lib/calculateTimeAgo";
 import { Card, CardBody } from "@nextui-org/react";
+import dayjs from "dayjs";
 
 const groupSort = (prev, next) => {
 	const regex = /\d+/;
@@ -25,7 +26,7 @@ const groupSort = (prev, next) => {
 		case prev.includes("hour") && next.includes("yesterday"):
 			return -1;
 		default:
-			return new Date(prev) - new Date(next);
+			return dayjs(prev).isBefore(dayjs(next));
 	}
 };
 const AccountTransactions = ({ account }) => {
