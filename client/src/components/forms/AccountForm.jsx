@@ -3,7 +3,6 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalBody,
-	ModalFooter,
 	Button,
 	Input,
 	Select,
@@ -15,7 +14,13 @@ import { useForm, Controller } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
 import currencies from "../../lib/supportedCurrencies";
 
-const AccountForm = ({ isOpen, onOpenChange, onSubmit }) => {
+const AccountForm = ({
+	isOpen,
+	onOpenChange,
+	onSubmit,
+	accountData,
+	modalHeader,
+}) => {
 	const owner = jwtDecode(localStorage.getItem("access_token")).user_id;
 	const schema = z.object({
 		name: z
@@ -32,13 +37,15 @@ const AccountForm = ({ isOpen, onOpenChange, onSubmit }) => {
 			.min(3, { message: "Please select account currency" }),
 	});
 	const { control, register, handleSubmit } = useForm({
-		defaultValues: {
-			name: "",
-			color: "#ffffff",
-			owner,
-			balance: 0,
-			currency: "TND",
-		},
+		defaultValues: accountData
+			? accountData
+			: {
+					name: "",
+					color: "#ffffff",
+					owner,
+					balance: 0,
+					currency: "TND",
+			  },
 		resolver: zodResolver(schema),
 	});
 	return (
@@ -50,7 +57,9 @@ const AccountForm = ({ isOpen, onOpenChange, onSubmit }) => {
 				className="min-h-[55vh]">
 				<ModalContent>
 					<ModalHeader className="flex flex-col gap-1">
-						<p className="pb-2 border-b">Add a new account</p>
+						<p className="pb-2 border-b">
+							{modalHeader || "Add a new account"}
+						</p>
 					</ModalHeader>
 					<ModalBody>
 						<form onSubmit={handleSubmit(onSubmit)}>

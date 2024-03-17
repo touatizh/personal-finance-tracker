@@ -6,16 +6,19 @@ import {
 	CardBody,
 	CardFooter,
 	Button,
+	useDisclosure,
 } from "@nextui-org/react";
 import AccountIcon from "../ui/AccountIcon";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import AccountTransactions from "./AccountTransactions";
 import AccountBalanceChart from "../charts/AccountBalanceChart";
+import EditAccount from "./EditAccount";
 
 const AccountDetails = () => {
 	const { accountId } = useParams();
 	const [activeTab, setActiveTab] = useState("balance");
+	const { isOpen, onOpenChange, onOpen } = useDisclosure();
 
 	const axios = useAxios();
 	const { data: details, isLoading } = useQuery(["accounts", accountId], () =>
@@ -27,7 +30,10 @@ const AccountDetails = () => {
 				<CardHeader className="flex justify-between px-10 py-4 bg-background-lightest border-b">
 					<div className="text-lg font-bold">Account Detail</div>
 					<div className="flex gap-8">
-						<Button variant="ghost" color="primary">
+						<Button
+							variant="ghost"
+							color="primary"
+							onPress={onOpen}>
 							Edit
 						</Button>
 						<Button variant="ghost" color="danger">
@@ -112,6 +118,11 @@ const AccountDetails = () => {
 			{activeTab === "transactions" && (
 				<AccountTransactions account={accountId} />
 			)}
+			<EditAccount
+				account={details?.data}
+				isOpen={isOpen}
+				onOpenChange={onOpenChange}
+			/>
 		</>
 	);
 };
