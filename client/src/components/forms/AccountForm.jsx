@@ -131,7 +131,10 @@ const AccountForm = ({
 										}
 										errorMessage={fieldState.error?.message}
 										label="Account type"
-										disallowEmptySelection>
+										disallowEmptySelection
+										selectedKeys={[
+											accountData?.type || "GEN",
+										]}>
 										<SelectItem key={"GEN"} value={"GEN"}>
 											General
 										</SelectItem>
@@ -202,7 +205,10 @@ const AccountForm = ({
 												}
 												items={Object.keys(currencies)}
 												label="Account currency"
-												selectionMode="single">
+												selectionMode="single"
+												selectedKeys={[
+													accountData?.currency,
+												]}>
 												{Object.entries(currencies).map(
 													(kvp) => (
 														<SelectItem
