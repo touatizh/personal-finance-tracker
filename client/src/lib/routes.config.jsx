@@ -4,6 +4,7 @@ import RegisterPage from "../pages/RegisterPage";
 import Logout from "../components/containers/Logout";
 import AccountsPage from "../pages/AccountsPage";
 import AccountDetailsPage from "../pages/AccountDetailsPage";
+import TransactionsPage from "../pages/TransactionsPage";
 
 export const routes = [
 	{
@@ -34,6 +35,11 @@ export const routes = [
 	{
 		path: "/accounts/:accountId",
 		element: <AccountDetailsPage />,
+		protected: true,
+	},
+	{
+		path: "/transactions",
+		element: <TransactionsPage />,
 		protected: true,
 	},
 ];

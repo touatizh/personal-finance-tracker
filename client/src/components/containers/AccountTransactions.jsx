@@ -3,32 +3,8 @@ import { useQuery } from "react-query";
 import { timeAgo } from "../../lib/calculateTimeAgo";
 import { Card, CardBody } from "@nextui-org/react";
 import dayjs from "dayjs";
+import { groupSort } from "../../lib/transactionsGroupsSort";
 
-const groupSort = (prev, next) => {
-	const regex = /\d+/;
-	const prevNum = parseInt(prev.match(regex));
-	const nextNum = parseInt(next.match(regex));
-	switch (true) {
-		case prev.includes("minute") && next.includes("hour"):
-			return -1;
-		case prev.includes("hour") && next.includes("minute"):
-			return 1;
-		case prev.includes("minute") && next.includes("minutes"):
-		case prev.includes("hour") && next.includes("hours"):
-		case prev.includes("yesterday") && next.includes("minutes"):
-			return 1;
-		case prev.includes("yesterday") && next.includes("hours"):
-			return 1;
-		case prev.includes("yesterday") && next.includes("yesterday"):
-			return 0;
-		case prev.includes("minute") && next.includes("yesterday"):
-			return -1;
-		case prev.includes("hour") && next.includes("yesterday"):
-			return -1;
-		default:
-			return dayjs(prev).isBefore(dayjs(next));
-	}
-};
 const AccountTransactions = ({ account }) => {
 	const axios = useAxios();
 	const { data: transactions, isLoading } = useQuery(
