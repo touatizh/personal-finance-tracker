@@ -14,7 +14,7 @@ const AccountTransactions = ({ account }) => {
 			onSuccess: (res) => {
 				timeAgo(res);
 				res.data = res.data
-					.filter((t) => t.account.id == account)
+					.filter((t) => t.account == account)
 					.sort(
 						(prev, next) =>
 							new Date(next.date_time) - new Date(prev.date_time)

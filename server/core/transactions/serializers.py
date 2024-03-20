@@ -7,7 +7,6 @@ from core.utils.currency_converter import currency_converter
 from core.accounts.serializers import AccountSerializer
 
 class TransactionSerializer(serializers.ModelSerializer):
-    account = AccountSerializer(read_only=True)
     class Meta:
         model = Transaction
         fields = "__all__"

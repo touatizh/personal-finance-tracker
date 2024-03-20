@@ -28,7 +28,7 @@ const ListTransactions = ({ filterBy, sortBy, search }) => {
 
 		if (filterBy !== "all" && !isNaN(parseInt(filterBy))) {
 			filteredData = filteredData.filter(
-				(t) => t.account.id === parseInt(filterBy)
+				(t) => t.account === parseInt(filterBy)
 			);
 		}
 		if (search != "") {

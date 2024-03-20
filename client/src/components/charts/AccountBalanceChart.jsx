@@ -24,7 +24,7 @@ const AccountBalanceChart = ({ account, periodInDays }) => {
 		{
 			onSuccess: (res) => {
 				res.data = res.data
-					.filter((t) => t.account?.id == account?.id)
+					.filter((t) => t.account == account?.id)
 					.sort(
 						(prev, next) =>
 							dayjs(next.date_time) - dayjs(prev.date_time)
