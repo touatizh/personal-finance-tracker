@@ -31,7 +31,9 @@ const AccountForm = ({
 		}),
 		owner: z.number().gt(0, { message: "Please provide account owner" }),
 		type: z.string().min(2, { message: "Please select an account type" }),
-		balance: z.string().transform((str) => parseInt(str)),
+		balance: z.coerce
+			.number()
+			.min(0, { message: "Please provide a valid balance" }),
 		currency: z
 			.string()
 			.min(3, { message: "Please select account currency" }),
@@ -132,7 +134,7 @@ const AccountForm = ({
 										errorMessage={fieldState.error?.message}
 										label="Account type"
 										disallowEmptySelection
-										selectedKeys={[
+										defaultSelectedKeys={[
 											accountData?.type || "GEN",
 										]}>
 										<SelectItem key={"GEN"} value={"GEN"}>
@@ -144,7 +146,7 @@ const AccountForm = ({
 										<SelectItem key={"CA"} value={"CA"}>
 											Current Account
 										</SelectItem>
-										<SelectItem key={"SAV"} value={"SAV"}>
+										<SelectItem key={"SA"} value={"SA"}>
 											Saving Account
 										</SelectItem>
 										<SelectItem key={"INV"} value={"INV"}>
@@ -172,12 +174,6 @@ const AccountForm = ({
 												errorMessage={
 													fieldState.error?.message
 												}
-												onChange={(e) => {
-													const value = parseFloat(
-														e.target.value
-													);
-													field.onChange(value);
-												}}
 												label="Initial balance"
 												variant="bordered"
 												type="number"
@@ -206,7 +202,7 @@ const AccountForm = ({
 												items={Object.keys(currencies)}
 												label="Account currency"
 												selectionMode="single"
-												selectedKeys={[
+												defaultSelectedKeys={[
 													accountData?.currency,
 												]}>
 												{Object.entries(currencies).map(
