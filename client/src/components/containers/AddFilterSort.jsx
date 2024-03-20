@@ -13,6 +13,7 @@ import { SearchIcon } from "../ui/SearchIcon";
 import AccountForm from "../forms/AccountForm";
 import useAxios from "../../lib/useAxios";
 import { useMutation, useQueryClient } from "react-query";
+import TransactionForm from "../forms/TransactionForm";
 
 const AddFilterSort = ({ sortBy, filterBy, search, accounts }) => {
 	const { isOpen, onOpenChange, onOpen } = useDisclosure();
@@ -112,6 +113,12 @@ const AddFilterSort = ({ sortBy, filterBy, search, accounts }) => {
 					</Select>
 				</CardBody>
 			</Card>
+			<TransactionForm
+				accounts={accounts}
+				isOpen={isOpen}
+				onOpenChange={onOpenChange}
+				onSubmit={saveTransaction}
+			/>
 		</>
 	);
 };
