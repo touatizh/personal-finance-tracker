@@ -1,24 +1,29 @@
 import dayjs from "dayjs";
 
 export const groupSort = (prev, next) => {
+    const prevNum = parseInt(prev.split(" ")[0]);
+	const nextNum = parseInt(next.split(" ")[0]);
+
+	const prevUnit = prev.split(" ")[1] || prev;
+	const nextUnit = next.split(" ")[1] || next;
 	switch (true) {
-		case prev.includes("minute") && next.includes("hour"):
+		case prevUnit.includes("minute") && nextUnit.includes("minute"):
+			return prevNum - nextNum;
+		case prevUnit.includes("minute"):
 			return -1;
-		case prev.includes("hour") && next.includes("minute"):
+		case nextUnit.includes("minute"):
 			return 1;
-		case prev.includes("minute") && next.includes("minutes"):
-		case prev.includes("hour") && next.includes("hours"):
-		case prev.includes("yesterday") && next.includes("minutes"):
-			return 1;
-		case prev.includes("yesterday") && next.includes("hours"):
-			return 1;
-		case prev.includes("yesterday") && next.includes("yesterday"):
-			return 0;
-		case prev.includes("minute") && next.includes("yesterday"):
+		case prevUnit.includes("hour") && nextUnit.includes("hour"):
+			return prevNum - nextNum;
+		case prevUnit.includes("hour"):
 			return -1;
-		case prev.includes("hour") && next.includes("yesterday"):
+		case nextUnit.includes("hour"):
+			return 1;
+		case prevUnit.includes("yesterday"):
 			return -1;
+		case nextUnit.includes("yesterday"):
+			return 1;
 		default:
-			return dayjs(prev).isBefore(dayjs(next));
+			return dayjs(prev).isBefore(dayjs(next)) ? 1 : -1;
 	}
 };
