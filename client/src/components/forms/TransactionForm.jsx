@@ -7,6 +7,7 @@ import {
 	Input,
 	Select,
 	SelectItem,
+	Textarea,
 } from "@nextui-org/react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,17 +15,19 @@ import { useForm, Controller } from "react-hook-form";
 import currencies from "../../lib/supportedCurrencies";
 import categories from "../../lib/transactionCategories";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 
 const TransactionForm = ({
 	accounts,
 	isOpen,
 	onOpenChange,
+	onClose,
 	onSubmit,
 	transactionData,
 	modalHeader,
 }) => {
 	const schema = z.object({
-		account: z.string().transform((str) => parseInt(str)),
+		account: z.coerce.number(),
 		type: z.string().min(3, { message: "Please select transaction type" }),
 		category: z
 			.string()
@@ -45,16 +48,19 @@ const TransactionForm = ({
 			}),
 		description: z.string().optional(),
 	});
-	const { control, register, handleSubmit } = useForm({
-		defaultValues: transactionData
-			? transactionData
-			: {
-					amount: 0,
-					date_time: dayjs().format("YYYY-MM-DD HH:mm"),
-					description: "",
-			  },
+	const { control, register, handleSubmit, reset } = useForm({
 		resolver: zodResolver(schema),
 	});
+
+	useEffect(() => {
+		reset({
+			amount: transactionData?.amount || 0,
+			date_time:
+				dayjs(transactionData?.date_time).format("YYYY-MM-DDTHH:mm") ||
+				dayjs().format("YYYY-MM-DDTHH:mm"),
+			description: transactionData?.description || "",
+		});
+	}, [transactionData]);
 
 	return (
 		<>
@@ -93,8 +99,7 @@ const TransactionForm = ({
 												label="Type"
 												disallowEmptySelection
 												defaultSelectedKeys={[
-													transactionData?.type ||
-														"EXP",
+													transactionData?.type || "",
 												]}>
 												<SelectItem
 													key={"EXP"}
@@ -129,7 +134,11 @@ const TransactionForm = ({
 													fieldState.error?.message
 												}
 												label="Account"
-												disallowEmptySelection>
+												disallowEmptySelection
+												defaultSelectedKeys={[
+													transactionData?.account.toString() ||
+														"",
+												]}>
 												{accounts?.data?.map(
 													(account) => (
 														<SelectItem
@@ -159,7 +168,10 @@ const TransactionForm = ({
 										}
 										errorMessage={fieldState.error?.message}
 										label="Category"
-										disallowEmptySelection>
+										disallowEmptySelection
+										defaultSelectedKeys={[
+											transactionData?.category || "",
+										]}>
 										{Object.entries(categories).map(
 											(kvp) => (
 												<SelectItem
@@ -195,6 +207,7 @@ const TransactionForm = ({
 												label="Amount"
 												variant="bordered"
 												type="number"
+												step="0.01"
 											/>
 										)}
 									/>
@@ -218,9 +231,9 @@ const TransactionForm = ({
 													fieldState.error?.message
 												}
 												label="Currency"
-												selectionMode="single"
 												defaultSelectedKeys={[
-													transactionData?.currency,
+													transactionData?.currency ||
+														"",
 												]}>
 												{Object.entries(currencies).map(
 													(kvp) => (
@@ -255,18 +268,30 @@ const TransactionForm = ({
 										onChange={(e) => {
 											const value = dayjs(
 												e.target.value
-											).format("YYYY-MM-DDThh:mm");
+											).format("YYYY-MM-DDTHH:mm");
 											field.onChange(value);
 										}}
 									/>
 								)}
 							/>
-
+							<div className="mb-8">
+								<Controller
+									name="description"
+									control={control}
+									render={({ field }) => (
+										<Textarea
+											{...field}
+											{...register("description")}
+											label="Description"
+										/>
+									)}
+								/>
+							</div>
 							<div className="flex justify-end gap-5">
 								<Button
 									color="danger"
 									variant="flat"
-									onPress={onOpenChange}>
+									onPress={onClose}>
 									Cancel
 								</Button>
 								<Button color="primary" type="submit">

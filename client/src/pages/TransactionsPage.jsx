@@ -32,6 +32,7 @@ const TransactionsPage = () => {
 						sortBy={sortedBy}
 						search={search}
 						filterBy={accountFilter}
+						accounts={accounts}
 					/>
 				</div>
 			</div>

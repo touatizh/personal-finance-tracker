@@ -10,13 +10,12 @@ import {
 	useDisclosure,
 } from "@nextui-org/react";
 import { SearchIcon } from "../ui/SearchIcon";
-import AccountForm from "../forms/AccountForm";
 import useAxios from "../../lib/useAxios";
 import { useMutation, useQueryClient } from "react-query";
 import TransactionForm from "../forms/TransactionForm";
 
 const AddFilterSort = ({ sortBy, filterBy, search, accounts }) => {
-	const { isOpen, onOpenChange, onOpen } = useDisclosure();
+	const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [sortValue, setSortValue] = useState("a-z");
 	const [filterValue, setFilterValue] = useState("all");
@@ -32,7 +31,7 @@ const AddFilterSort = ({ sortBy, filterBy, search, accounts }) => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("transactions");
-				onOpenChange();
+				onClose();
 			},
 		}
 	);
@@ -118,6 +117,7 @@ const AddFilterSort = ({ sortBy, filterBy, search, accounts }) => {
 				isOpen={isOpen}
 				onOpenChange={onOpenChange}
 				onSubmit={saveTransaction}
+				onClose={onClose}
 			/>
 		</>
 	);
